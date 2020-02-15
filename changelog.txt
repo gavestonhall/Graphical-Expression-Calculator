@@ -1,0 +1,20 @@
+INFIX POSTFIX CALCULATOR CHANGELOG:
+
+Release 3.1
+- Fixed bug where multiple non-spaced operators would be a valid
+  expression for both infix and postfix.
+- Improved readme.txt instructions.
+
+Release 3.0
+- Made CalcModel a singleton as it is supposed to be
+- Fixed some encapsulation issues.
+- No functional changes.
+
+Release 2.0
+- Added an ASCII view to provide another way to interact with the calculator.
+  When you run the program from the command line it will launch this view.
+
+Release 1.0
+- Graphical interface.
+- Can add, multiply, substract and divide numbers.
+- Handle both postfix and infix experssions.

@@ -1,0 +1,261 @@
+<diagram program="umletino" version="14.3.0"><zoom_level>10</zoom_level><element><id>UMLClass</id><coordinates><x>1010</x><y>730</y><w>290</w><h>280</h></coordinates><panel_attributes>_calculator::Stack_
+bg=pink
+A Stack of Entry values
+--
+*Attributes*
+-entries: List&lt;Entry&gt;
+/    Create ArrayList based Stack/
+--
+*Responsibilities*
++push(entry: Entry)
+/    Adds a new Entry to the Stack/
++pop(): Entry
+    {exception=EmptyStack}
+/    Returns (and removes) newest Entry/
++top(): Entry
+    {exception=EmptyStack}
+/    Return (but keeps) newest Entry/
++size(): integer
+/    Number of Entry's in the Stack/
++toString(): String &lt;&lt;override&gt;&gt;</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>940</x><y>570</y><w>250</w><h>120</h></coordinates><panel_attributes>&lt;&lt;interface&gt;&gt; 
+bg=yellow
+_calculator::Calculator_
+Allows evaluation of string expressions
+--
+*Responsibilities*
++evaluate(expression: String): float
+    {exception=InvalidExpression}</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1380</x><y>1170</y><w>230</w><h>210</h></coordinates><panel_attributes>&lt;&lt;enumeration&gt;&gt; 
+bg=orange
+_calculator::Type_
+A list of the types of 
+value an Entry can represent
+--
+*Attributes*
+-type: String
+--
+*Responsibilities*
+&lt;&lt;constructor&gt;&gt; +Type(type: String)
++toString(): String &lt;&lt;override&gt;&gt;
+--
+*Constants*
+_NUMBER_
+_SYMBOL_
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1030</x><y>1080</y><w>310</w><h>330</h></coordinates><panel_attributes>_calculator::Entry_
+bg=orange
+A value stored in a Stack
+--
+*Attributes*
+-number: float
+-symbol: Symbol
+-string: String
+-type: Type
+--
+*Responsibilities*
+&lt;&lt;constructor&gt;&gt; +Entry(number: float)
+&lt;&lt;constructor&gt;&gt; +Entry(symbol: Symbol)
+-isGoodType(type: Type, expected: Type): boolean
+/    Checks that you use the correct typed getter/
++getType(): Type
++getSymbol(): Symbol
+    {exception=BadType}
++getValue(): float
+    {exception=BadType}
++equals(o: Object): boolean &lt;&lt;override&gt;&gt;
++hashCode(): int &lt;&lt;override&gt;&gt;
++toString(): String &lt;&lt;override&gt;&gt;
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>620</x><y>1070</y><w>360</w><h>340</h></coordinates><panel_attributes>&lt;&lt;enumeration&gt;&gt; 
+bg=orange
+_calculator::Symbol_
+A list of the non-number tokens 
+possible in an expression
+--
+*Attributes*
+-symbol: String
+-symLiteral: char
+--
+*Responsibilities*
+&lt;&lt;constructor&gt;&gt; +Symbol(symbol: String, symLiteral: char)
++getOpLiteral(): char
++toString(): String &lt;&lt;override&gt;&gt;
+/    Converts an operator to a char literal/
+--
+*Constants*
+_LEFT_BRACKET_
+_RIGHT_BRACKET_
+_TIMES_
+_DIVIDE_
+_PLUS_
+_MINUS_
+_INVALID_
+
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>620</x><y>0</y><w>400</w><h>260</h></coordinates><panel_attributes>&lt;&lt;model&gt;&gt;
+&lt;&lt;singleton&gt;&gt;
+bg=red
+_patterns:CalcModel_
+Determines functionality of the calculator depending on 
+whether the user entered an infix or postfix expression
+--
+*Attributes*
+-rpnCalc: Calculator
+-standardCalc: Calculator
+--
+*Responsibilities*
+&lt;&lt;constructor&gt;&gt; -CalcModel()
+/    Unable to instantiate as part of Singleton pattern/
++getInstance(): CalcModel &lt;&lt;static&gt;&gt;
+/    Gets instance as part of Singleton pattern/
++evaluate(expr: String): float
+    {exception=InvalidExpression}
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>630</x><y>700</y><w>270</w><h>190</h></coordinates><panel_attributes>bg=pink
+_calculator::NumStack_
+A Stack containing number-typed Entry's
+--
+*Attributes*
+-numStack: Stack
+--
+*Responsibilities*
+&lt;&lt;constructor&gt;&gt; +NumStack()
+/    Creates a Stack/
++push(number: float)
++pop(): float
+    {exception=EmptyStack}
++isEmpty(): boolean
+
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1350</x><y>540</y><w>290</w><h>230</h></coordinates><panel_attributes>bg=pink
+_calculator::OpStack_
+A Stack containing symbol-typed Entry's
+--
+*Attributes*
+-opStack: Stack
+/    Creates a Stack/
+--
+*Responsibilities*
++push(symbol: Symbol)
++pop(): Symbol
+    {exception=EmptyStack}
++isEmpty(): boolean
++top(): Symbol
+    {exception=EmptyStack}
+/    Required for shunting-yard algorithm/
+
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1050</x><y>220</y><w>270</w><h>300</h></coordinates><panel_attributes>bg=yellow
+_calculator::StandardCalc_
+Evaluates infix expressions by converting
+to postfix then using a RevPolishCalc
+--
+*Attributes*
+-opStack: OpStack
+-inputQueue: Deque&lt;String&gt;
+-outputQueue: Deque&lt;String&gt;
+-rpnCalc: RevPolishCalc
+--
+*Responsibilities*
+&lt;&lt;constructor&gt;&gt; +StandardCalc()
+/    Creates an RPN calculator/
+-getPrecedence(op: char): int
+/    Determines the order of operations/
+-opLiteralToSymbol(literal: char): Symbol
+/    Converts a char literal to a Symbol type/
+-isNumeric(stringNum: String)
++evaluate(expression: String): float
+    {exception=InvalidExpression}</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>680</x><y>300</y><w>330</w><h>200</h></coordinates><panel_attributes>bg=yellow
+_calculator::RevPolishCalc_
+Evaluates postfix expressions
+(Reverse Polish Notation)
+--
+*Attributes*
+-evalStack: NumStack
+--
+*Responsibilities*
+-calculate(operator: char, oper1: float, oper2: float)
+    {exception=Arithmetic}
+/    Performs a calculation of a single operator/
++evaluate(expression: String): float
+     {exception=InvalidExpression}</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>730</x><y>250</y><w>90</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;70;50</additional_attributes></element><element><id>Relation</id><coordinates><x>1010</x><y>110</y><w>170</w><h>130</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;150;110</additional_attributes></element><element><id>Relation</id><coordinates><x>1310</x><y>350</y><w>190</w><h>210</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;170;190</additional_attributes></element><element><id>Relation</id><coordinates><x>1290</x><y>760</y><w>210</w><h>220</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+&lt;&lt;facade&gt;&gt;</panel_attributes><additional_attributes>190;10;10;200</additional_attributes></element><element><id>Relation</id><coordinates><x>770</x><y>880</y><w>260</w><h>110</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m1pos=-50,20
+m1=&lt;&lt;facade&gt;&gt;</panel_attributes><additional_attributes>40;10;240;90</additional_attributes></element><element><id>Relation</id><coordinates><x>1100</x><y>510</y><w>80</w><h>80</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;60;60;10</additional_attributes></element><element><id>Relation</id><coordinates><x>930</x><y>490</y><w>120</w><h>100</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>100;80;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>1130</x><y>1000</y><w>70</w><h>100</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m2=0..*</panel_attributes><additional_attributes>10;10;30;80</additional_attributes></element><element><id>Relation</id><coordinates><x>1330</x><y>1210</y><w>70</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;50;10</additional_attributes></element><element><id>Relation</id><coordinates><x>970</x><y>1210</y><w>80</w><h>30</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>60;10;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>310</x><y>660</y><w>230</w><h>200</h></coordinates><panel_attributes>&lt;&lt;view&gt;&gt;
+_gui::GuiView_
+A graphical window with:
+1. a text field for an expression
+2. an evaluate button
+3. an answer field 
+--
+*Attributes*
+-exprField: javafx.TextField
+-evalButton: javafx.Button
+-answer: javafx.Label
+bg=green</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>530</x><y>80</y><w>110</w><h>30</h></coordinates><panel_attributes>lt=&lt;.</panel_attributes><additional_attributes>90;10;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>430</x><y>290</y><w>40</w><h>180</h></coordinates><panel_attributes>lt=&lt;.</panel_attributes><additional_attributes>20;160;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>30</x><y>290</y><w>260</w><h>390</h></coordinates><panel_attributes>lt=&lt;.
+m2=&lt;&lt;Observer&gt;&gt;</panel_attributes><additional_attributes>10;370;180;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>200</x><y>40</y><w>340</w><h>260</h></coordinates><panel_attributes>&lt;&lt;controller&gt;&gt;
+bg=blue
+_gui:CalcController_
+Decouples business logic from views by adding
+itself as an observer to the view so that
+ (asynchronous) changes can be observed. 
+--
+*Attributes*
+-model: CalcModel
+-myView: ViewInterface
+--
+*Responsibilities*
+&lt;&lt;constructor&gt;&gt; +CalcController(view: ViewInterface)
+/    Adds itself as an observer to monitor view changes/
+-calculate()
+   {exception=InvalidExpression}
+   {exception=Arithmetic}
+/    Notified when a calculation is required/
+ 
+
+group=2</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>770</x><y>490</y><w>70</w><h>230</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>50;10;10;210</additional_attributes></element><element><id>UMLClass</id><coordinates><x>600</x><y>0</y><w>1080</w><h>1420</h></coordinates><panel_attributes>                                                              
+                                                              
+                                                              
+                                                              Model Assembly
+layer=-1
+fontsize=28
+fg=magenta
+bg=light_gray</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>180</x><y>20</y><w>380</w><h>350</h></coordinates><panel_attributes>valign=bottom
+Controller
+layer=-1
+fontsize=28
+fg=magenta
+bg=light_gray
+group=2</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>0</x><y>440</y><w>590</w><h>500</h></coordinates><panel_attributes>valign=bottom
+View Assembly
+fontsize=28
+fg=magenta
+bg=light_gray
+layer=-1</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>160</x><y>450</y><w>310</w><h>170</h></coordinates><panel_attributes>&lt;&lt;Interface&gt;&gt;
+_patterns::ViewInterface_
+A view must:
+1. get an expression entered
+2. give the user the answer of that expression
+3. controller is able to observe changes
+--
+*Responsibilities*
++getExpression(): String
++setAnswer(result: String)
++addCalcObserver(result: String)
+bg=green</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>10</x><y>660</y><w>290</w><h>200</h></coordinates><panel_attributes>&lt;&lt;view&gt;&gt;
+_ascii::AsciiView_
+A command line based view
+--
+*Attributes*
+-expression: String
+-calc: Observer
+--
+*Responsibilities*
+-help()
+/    Displays how to use the interface/
++menu()
+/    The text interface the user interacts with/
+bg=green</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>450</x><y>290</y><w>110</w><h>390</h></coordinates><panel_attributes>lt=&lt;.
+m2=&lt;&lt;Observer&gt;&gt;</panel_attributes><additional_attributes>90;370;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>180</x><y>610</y><w>100</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>80;10;10;50</additional_attributes></element><element><id>Relation</id><coordinates><x>380</x><y>610</y><w>100</w><h>70</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;10;80;50</additional_attributes></element><element><id>Relation</id><coordinates><x>1000</x><y>340</y><w>70</w><h>60</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes><additional_attributes>50;10;10;40</additional_attributes></element><element><id>UMLNote</id><coordinates><x>1370</x><y>240</y><w>290</w><h>90</h></coordinates><panel_attributes>Note:
+Use of an ArrayDeque is actually faster than
+the implementation of an ArrayList based
+Stack, whilst also being more readable using
+terminology related to the shunting-yard algorithm
+bg=yellow</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1310</x><y>280</y><w>80</w><h>30</h></coordinates><panel_attributes>lt=.</panel_attributes><additional_attributes>10;10;60;10</additional_attributes></element><element><id>UMLNote</id><coordinates><x>200</x><y>1010</y><w>200</w><h>70</h></coordinates><panel_attributes>Note:
+Also implements ViewInterface
+methods implicitly
+bg=green</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>330</x><y>850</y><w>180</w><h>180</h></coordinates><panel_attributes>lt=.</panel_attributes><additional_attributes>160;10;10;160</additional_attributes></element><element><id>Relation</id><coordinates><x>100</x><y>850</y><w>160</w><h>180</h></coordinates><panel_attributes>lt=.</panel_attributes><additional_attributes>10;10;140;160</additional_attributes></element></diagram>
